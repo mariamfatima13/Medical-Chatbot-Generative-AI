@@ -1,14 +1,27 @@
-from langchain.document_Loaders import PyPDFLoader, DirectoryLoader
-from langcahin.text_splitter import RecursiveCharacterTextSplitter
+from langchain.document_loaders import PyPDFLoader, DirectoryLoader
+from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings import HuggingFaceEmbeddings
+# from langchain_community.document_loaders import PyPDFLoader, DirectoryLoader
+# from langchain_community.embeddings import HuggingFaceEmbeddings
+
 
 # extract data from pdf file
-def load_pdf_file(data):
-    loader = DirectoryLoader(data,
-                             glob = "*>pdf",
-                             loader_cls = PyPDFLoader)
-    documents = loader.load()
+# def load_pdf_file(data):
+#     loader = DirectoryLoader(data,
+#                              glob = "*>pdf",
+#                              loader_cls = PyPDFLoader)
+#     documents = loader.load()
 
+#     return documents
+def load_pdf_file(data):
+    loader = DirectoryLoader(
+        path=data,
+        glob="**/*.pdf",  # recursive search
+        loader_cls=PyPDFLoader,
+        show_progress=True
+    )
+    documents = loader.load()
+    print(f"📄 Loaded {len(documents)} documents from PDF.")
     return documents
 
 # split the data into text chunks
