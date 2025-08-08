@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Medical Chatbot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <h2 style="text-align:center;">🩺 Medical Chatbot</h2>
+    <div id="chatbox"></div>
+
+    <form id="input-form" method="post">
+        <input type="text" id="msg" name="msg" placeholder="Ask something..." required>
+        <button type="submit" id="submit">Send</button>
+    </form>
+
+    <script>
+        const form = document.getElementById("input-form");
+        const msgInput = document.getElementById("msg");
+        const chatbox = document.getElementById("chatbox");
+
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            const userMsg = msgInput.value.trim();
+            if (!userMsg) return;
+
+            chatbox.innerHTML += `<div class="user"><strong>You:</strong> ${userMsg}</div>`;
+            msgInput.value = "";
+
+            const response = await fetch("/get", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: `msg=${encodeURIComponent(userMsg)}`
+            });
+
+            const data = await response.text();
+            chatbox.innerHTML += `<div class="bot"><strong>Bot:</strong> ${data}</div>`;
+            chatbox.scrollTop = chatbox.scrollHeight;
+        };
+    </script>
+</body>
+</html>
